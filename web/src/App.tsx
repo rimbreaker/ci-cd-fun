@@ -4,13 +4,12 @@ import './App.css';
 import { HexColorPicker } from 'react-colorful';
 import accessEnv from './utils/accessEnv';
 
-const SERVER_ADDRESS = accessEnv('SERVER_ADDRESS', 'http://localhost')
-const SERVER_PORT = accessEnv('SERVER_PORT', '3030')
+const SERVER_ADDRESS = accessEnv('SERVER_ADDRESS', 'https://ci-cd-back.herokuapp.com')
+const ENV = accessEnv('NODE_ENV')
 
-console.log("test")
 const gun = Gun({
   peers: [
-    `${SERVER_ADDRESS}:${SERVER_PORT}/gun`
+    `${SERVER_ADDRESS}${ENV === 'development' ? ':3030' : ''}/gun`
   ], localStorage: false
 })
 
@@ -42,7 +41,7 @@ function App() {
 
   const getColorName = async (colorHash: string) => {
     try {
-      const response = await (await fetch(`${SERVER_ADDRESS}:${SERVER_PORT}/api/color/${colorHash.slice(1)}`)).json()
+      const response = await (await fetch(`${SERVER_ADDRESS}${ENV === 'development' ? ':3030' : ''}/api/color/${colorHash.slice(1)}`)).json()
       setColorName(response.name)
     }
     catch (e) {
