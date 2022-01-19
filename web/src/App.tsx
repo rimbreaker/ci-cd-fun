@@ -7,6 +7,7 @@ import accessEnv from './utils/accessEnv';
 const SERVER_ADDRESS = accessEnv('SERVER_ADDRESS', 'http://localhost')
 const SERVER_PORT = accessEnv('SERVER_PORT', '3030')
 
+console.log("test")
 const gun = Gun({
   peers: [
     `${SERVER_ADDRESS}:${SERVER_PORT}/gun`
