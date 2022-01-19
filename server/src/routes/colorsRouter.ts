@@ -7,7 +7,7 @@ const router = express.Router();
  * @swagger
  * tags:
  *    name: colors API
- *    description: Ednpoints used to access the data in database for moves
+ *    description: Ednpoints used for fetching color names
  */
 
 /**
