@@ -3,13 +3,13 @@ name: backend CI
 # Controls when the workflow will run
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
-    paths: ['server/**']
+    branches: [main]
+    paths: ["server/**"]
 
 jobs:
-  Build-n-deploy:
+  Build-n-deploy-backend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
