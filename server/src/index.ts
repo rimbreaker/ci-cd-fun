@@ -13,7 +13,7 @@ app.use(
   })
 );
 app.use(express.json());
-const PORT = accessEnv("SERVER_PORT", 3030);
+const PORT = accessEnv("PORT", 3030);
 
 app.use("/api", colorsRouter);
 
