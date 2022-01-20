@@ -22,7 +22,13 @@ jobs:
           cache: "yarn"
           cache-dependency-path: web/yarn.lock
       - name: installing dependencies
-        run: yarn
+        run: yarn > yarn-report.txt
+        
+      - name: upload dependency report
+        uses: actions/upload-artifact@v2
+        with:
+          name: audit
+          path: yarn-report.txt
 
   Linting:
     needs: Node-Setup
@@ -132,15 +138,13 @@ jobs:
 
       - name: audit
         shell: bash
-        run: |
-          yarn
-          yarn yarn-audit-ci --high > audit.report.txt
+        run: yarn yarn-audit-ci --high > audit.report.txt
         
       - name: upload audit report
         uses: actions/upload-artifact@v2
         with:
           name: audit
-          path: web/audit-report.txt
+          path: audit-report.txt
 
   Dependency-Audit-Info:
     needs: Node-Setup
@@ -174,7 +178,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: audit
-          path: web/audit-report.json
+          path: audit-report.json
 
   Build-n-deploy-frontend:
     needs: [Linting, Test-Build, Unit-Tests,Dependency-Audit-High]
