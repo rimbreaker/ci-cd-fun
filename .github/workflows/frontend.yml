@@ -21,10 +21,10 @@ jobs:
         with:
           cache: "yarn"
           cache-dependency-path: web/yarn.lock
-      - run: ls
+      - run: mkdir -p artifacts
       - name: installing dependencies
         shell: bash
-        run: yarn > yarn-report.txt
+        run: yarn > artifacts/yarn-report.txt
         
       - run: ls 
         
@@ -32,7 +32,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: audit
-          path: yarn-report.txt
+          path: artifacts/yarn-report.txt
 
   Linting:
     needs: Node-Setup
@@ -139,7 +139,7 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-
+      - run: ls
       - name: audit
         shell: bash
         run: |
