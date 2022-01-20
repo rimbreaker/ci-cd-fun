@@ -139,7 +139,6 @@ jobs:
           path: ./web/audit-report.txt
 
   E2E-Tests:
-    needs: Node-Setup
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -155,9 +154,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           working-directory: web
-          path: web
           install: true
-          install-comand: yarn
           start: yarn start
           command: yarn cypress run
           browser: chrome
