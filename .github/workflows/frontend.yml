@@ -46,11 +46,13 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - name: linting
+      - name: linting js
         run: |
           yarn
           yarn lint:js
-          yarn lint:css
+
+      - name: linting css
+        run: yarn lint:css
 
   Test-Build:
     needs: Node-Setup
