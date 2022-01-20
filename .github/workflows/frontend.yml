@@ -167,9 +167,9 @@ jobs:
 
       - name: audit
         shell: bash
-        run: yarn audit --json | audit-report.json
+        run: yarn audit --json > audit-report.json
           
-        if: failure() || success()
+        if: failure() 
       - name: upload audit report
         uses: actions/upload-artifact@v2
         with:
