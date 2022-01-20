@@ -13,6 +13,9 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
+    defaults: 
+      run:
+        working-directory: ./web
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
@@ -20,8 +23,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
-      - name: setup
-      - working-directory: ./web
       - run: yarn
       - run: yarn build
 
