@@ -8,7 +8,7 @@ const setupSwagger = (app: Express) => {
     swaggerDefinition: {
       info: {
         title: "pieski-server",
-        description: "API for IPFS dashboard",
+        description: "API for color synchronized picker",
         version: "0.1.0",
       },
       contact: {

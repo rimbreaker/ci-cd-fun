@@ -24,7 +24,7 @@ const router = express.Router();
  *      tags: [colors API]
  *      responses:
  *          '200':
- *               description : the array of colors
+ *               description : a Pantone name for a given color
  */
 router.get("/color/:id", getColorName);
 
