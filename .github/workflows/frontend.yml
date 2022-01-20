@@ -23,7 +23,7 @@ jobs:
           cache-dependency-path: web/yarn.lock
           
       - name: installing dependencies
-        run: yarn --json > yarn-report.json
+        run: yarn --verbose --json > yarn-report.json
         
       - name: upload instalation report
         uses: actions/upload-artifact@v2
@@ -41,18 +41,6 @@ jobs:
     steps:
       - name: directory checkout
         uses: actions/checkout@v2
-
-      - name: cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.yarn
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
 
       - name: linting js
         run: |
@@ -114,7 +102,7 @@ jobs:
       - name: unit testing
         run: |
           yarn
-          yarn test --json > unit-test-report.json
+          yarn test --verbose --json > unit-test-report.json
           
       - name: upload testing report
         uses: actions/upload-artifact@v2
@@ -153,7 +141,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: reports
-          path: ./**/audit-report.txt
+          path: ./web/audit-report.txt
 
   Build-n-deploy-frontend:
     needs: [Linting, Test-Build, Unit-Tests,Dependency-Audit]
