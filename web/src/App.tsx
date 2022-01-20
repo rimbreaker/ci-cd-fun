@@ -58,8 +58,8 @@ function App() {
   }, [colorState])
 
   return (
-    <div className="App">
-      <header className="App-header" ref={backGroundRef}>
+    <div className="app">
+      <header className="app-header" ref={backGroundRef}>
         <div style={{ padding: 30 }}>
           <div style={{
             display: 'flex',
