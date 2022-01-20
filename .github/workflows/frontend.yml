@@ -33,7 +33,8 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: audit
-          path: artifacts/yarn-report.txt
+          path: ./yarn-report.txt
+          if-no-files-found: error
 
   Linting:
     needs: Node-Setup
