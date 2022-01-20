@@ -107,14 +107,38 @@ jobs:
         run: |
           yarn
           yarn test
-
-  Dependency-Audit:
+  
+  Dependency-Audit-High:
     needs: Node-Setup
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        audit-severity: [high, info]
-    if: ${{matrix.audit-severity}} == info
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - name: directory checkout
+        uses: actions/checkout@v2
+
+      - name: cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.yarn
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: audit
+        run: |
+          yarn
+          yarn yarn-audit-ci --high
+
+  Dependency-Audit-Info:
+    needs: Node-Setup
+    runs-on: ubuntu-latest
     continue-on-error: true
     defaults:
       run:
@@ -138,10 +162,12 @@ jobs:
       - name: audit
         run: |
           yarn
-          yarn yarn-audit-ci --${{matrix.audit-severity}}
+          yarn yarn-audit-ci
+        if: failure()
+        run: echo 'failed, lol'
 
   Build-n-deploy-frontend:
-    needs: [Linting, Test-Build, Unit-Tests]
+    needs: [Linting, Test-Build, Unit-Tests,Dependency-Audit-High]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
