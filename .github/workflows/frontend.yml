@@ -162,7 +162,9 @@ jobs:
         shell: bash
         run: |
           yarn
-          yarn audit --json > audit-report.json
+          yarn yarn-audit-ci --json > audit-report.json
+          
+        if: always()  
       - name: upload audit report
         uses: actions/upload-artifact@v2
         with:
