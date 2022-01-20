@@ -28,7 +28,7 @@ jobs:
       - name: upload instalation report
         uses: actions/upload-artifact@v2
         with:
-          name: yarn
+          name: reports
           path: ./web/yarn-report.json
           if-no-files-found: error
 
@@ -119,7 +119,7 @@ jobs:
       - name: upload testing report
         uses: actions/upload-artifact@v2
         with:
-          name: unit-test
+          name: reports
           path: ./web/unit-test-report.json
           if-no-files-found: error
   
@@ -152,7 +152,7 @@ jobs:
       - name: upload audit report
         uses: actions/upload-artifact@v2
         with:
-          name: audit
+          name: reports
           path: ./**/audit-report.txt
 
   Build-n-deploy-frontend:
