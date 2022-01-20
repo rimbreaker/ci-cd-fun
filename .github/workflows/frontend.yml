@@ -23,7 +23,7 @@ jobs:
           cache-dependency-path: web/yarn.lock
           
       - name: installing dependencies
-        run: yarn > yarn-report.txt
+        run: yarn --verbose > yarn-report.txt
         
       - run: ls
       
@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: audit
-          path: ./**/yarn-report.txt
+          path: ./web/yarn-report.txt
           if-no-files-found: error
 
   Linting:
