@@ -119,11 +119,11 @@ jobs:
       - name: upload testing report
         uses: actions/upload-artifact@v2
         with:
-          name: yarn
+          name: unit-test
           path: ./web/unit-test-report.json
           if-no-files-found: error
   
-  Dependency-Audit-High:
+  Dependency-Audit:
     needs: Node-Setup
     runs-on: ubuntu-latest
     defaults:
@@ -156,7 +156,7 @@ jobs:
           path: ./**/audit-report.txt
 
   Build-n-deploy-frontend:
-    needs: [Linting, Test-Build, Unit-Tests,Dependency-Audit-High]
+    needs: [Linting, Test-Build, Unit-Tests,Dependency-Audit]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
