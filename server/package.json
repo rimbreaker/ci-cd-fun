@@ -6,8 +6,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "nodemon --exec ts-node src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "./node_modules/.bin/eslint ./src/**/*.ts"
+    "lint": "./node_modules/.bin/eslint ./src/**/*.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jan Kacperczyk",
   "license": "ISC",

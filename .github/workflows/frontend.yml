@@ -26,6 +26,8 @@ jobs:
           yarn
           yarn lint:js
           yarn lint:css
+      - name: test build
+        run: yarn build
 
   Build-n-deploy-frontend:
     runs-on: ubuntu-latest

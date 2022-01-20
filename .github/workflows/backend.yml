@@ -25,6 +25,8 @@ jobs:
         run: |
           yarn
           yarn lint
+      - name: test build
+        run: yarn build
 
   Build-n-deploy-backend:
     runs-on: ubuntu-latest
