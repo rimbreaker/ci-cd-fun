@@ -24,6 +24,7 @@ jobs:
         uses: actions/setup-node@v2.5.1
         with:
           cache: 'yarn'
+          cache-dependency-path: web/yarn.lock
       - run: yarn
       - run: yarn build
 
