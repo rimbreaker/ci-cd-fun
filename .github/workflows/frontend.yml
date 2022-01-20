@@ -12,24 +12,21 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [16.x]
     defaults:
       run:
         working-directory: web
     steps:
       - uses: actions/checkout@v2
-      - run: pwd
-      - run: ls
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2.5.1
         with:
           cache: 'yarn'
           cache-dependency-path: web/yarn.lock
       - run: yarn
-      - run: yarn build
 
       - name: linting
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v2.5.1
       - run: yarn lint:js
 
   Build-n-deploy-frontend:
