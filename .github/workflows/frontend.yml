@@ -111,7 +111,6 @@ jobs:
   Dependency-Audit-High:
     needs: Node-Setup
     runs-on: ubuntu-latest
-    strategy:
     defaults:
       run:
         working-directory: web
