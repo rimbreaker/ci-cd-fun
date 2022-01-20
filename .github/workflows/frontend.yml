@@ -23,13 +23,13 @@ jobs:
           cache-dependency-path: web/yarn.lock
           
       - name: installing dependencies
-        run: yarn --verbose > yarn-report.txt
+        run: yarn --json > yarn-report.json
         
-      - name: upload dependency report
+      - name: upload instalation report
         uses: actions/upload-artifact@v2
         with:
-          name: audit
-          path: ./web/yarn-report.txt
+          name: yarn
+          path: ./web/yarn-report.json
           if-no-files-found: error
 
   Linting:
@@ -114,7 +114,14 @@ jobs:
       - name: unit testing
         run: |
           yarn
-          yarn test
+          yarn test --json > unit-test-report.json
+          
+      - name: upload testing report
+        uses: actions/upload-artifact@v2
+        with:
+          name: yarn
+          path: ./web/unit-test-report.json
+          if-no-files-found: error
   
   Dependency-Audit-High:
     needs: Node-Setup
@@ -140,41 +147,13 @@ jobs:
       - name: audit
         run: |
           yarn
-          yarn yarn-audit-ci --high
-
-  Dependency-Audit-Info:
-    needs: Node-Setup
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    defaults:
-      run:
-        working-directory: web
-    steps:
-      - name: directory checkout
-        uses: actions/checkout@v2
-
-      - name: cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.yarn
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-
-      - name: audit
-        run: yarn audit --json > audit-report.json
+          yarn yarn-audit-ci --high > audit-report.txt
           
-        if: failure() 
-      - run: ls
       - name: upload audit report
         uses: actions/upload-artifact@v2
         with:
           name: audit
-          path: ./**/audit-report.json
+          path: ./**/audit-report.txt
 
   Build-n-deploy-frontend:
     needs: [Linting, Test-Build, Unit-Tests,Dependency-Audit-High]
