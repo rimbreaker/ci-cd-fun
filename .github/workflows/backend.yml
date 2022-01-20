@@ -21,9 +21,9 @@ jobs:
         with:
           cache: "yarn"
           cache-dependency-path: server/yarn.lock
-      - name: linting
+      - name: installing dependencies
         run: yarn
-        
+
   Linting:
     needs: Setup
     runs-on: ubuntu-latest
@@ -45,8 +45,10 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: linting
-        run: yarn lint
-        
+        run: |
+          yarn
+          yarn lint
+
   Test-Build:
     needs: Setup
     runs-on: ubuntu-latest
@@ -68,10 +70,12 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: test build
-        run: yarn build
+        run: |
+          yarn
+          yarn build
 
   Build-n-deploy-backend:
-    needs: [Linting,Test-Build]
+    needs: [Linting, Test-Build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
