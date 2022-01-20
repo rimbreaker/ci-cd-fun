@@ -15,7 +15,7 @@ jobs:
         node-version: [12.x]
     defaults: 
       run:
-        working-directory: ./web
+        working-directory: web
     steps:
       - run: pwd
       - name: Use Node.js ${{ matrix.node-version }}
