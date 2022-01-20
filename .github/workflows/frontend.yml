@@ -156,7 +156,11 @@ jobs:
   
   Failure-Report:
     if: failure()
-    needs: [Linting, Test-Build, Unit-Tests,Dependency-Audit,Node-Setup]
+    needs: [Linting, Test-Build, Unit-Tests,Dependency-Audit,Node-Setup,Build-n-deploy-frontend]
     runs-on: ubuntu-latest
     steps:
-      - run: echo 'lol it failed'
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.1.0
+        with:
+          name: artifacts
+      - run: cat ./**/artifacts
