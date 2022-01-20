@@ -8,7 +8,7 @@ on:
     paths: ["web/**"]
 
 jobs:
-  QA:
+  Node-Setup:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -21,16 +21,66 @@ jobs:
         with:
           cache: "yarn"
           cache-dependency-path: web/yarn.lock
+      - name: installing dependencies
+        run: yarn
+
+  Linting:
+    needs: Node-Setup
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - name: directory checkout
+        uses: actions/checkout@v2
+
+      - name: cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.yarn
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
       - name: linting
         run: |
           yarn
           yarn lint:js
           yarn lint:css
+
+  Test-Build:
+    needs: Node-Setup
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - name: directory checkout
+        uses: actions/checkout@v2
+
+      - name: cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.yarn
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
       - name: test build
-        run: yarn build
+        run: |
+          yarn
+          yarn build
 
   Build-n-deploy-frontend:
-    needs: QA
+    needs: [Linting, Test-Build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -8,7 +8,7 @@ on:
     paths: ["server/**"]
 
 jobs:
-  Setup:
+  Node-Setup:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -25,7 +25,7 @@ jobs:
         run: yarn
 
   Linting:
-    needs: Setup
+    needs: Node-Setup
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -50,7 +50,7 @@ jobs:
           yarn lint
 
   Test-Build:
-    needs: Setup
+    needs: Node-Setup
     runs-on: ubuntu-latest
     defaults:
       run:
