@@ -156,7 +156,7 @@ jobs:
   
   Failure-Report:
     if: failure()
-    needs: [Linting, Test-Build, Unit-Tests,Dependency-Audit]
+    needs: [Linting, Test-Build, Unit-Tests,Dependency-Audit,Node-Setup]
     runs-on: ubuntu-latest
     steps:
       - run: echo 'lol it failed'
