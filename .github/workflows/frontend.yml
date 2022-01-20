@@ -160,9 +160,7 @@ jobs:
 
       - name: audit
         shell: bash
-        run: |
-          yarn
-          yarn yarn-audit-ci --json > audit-report.json
+        run: yarn audit --json > audit-report.json
           
         if: always()  
       - name: upload audit report
