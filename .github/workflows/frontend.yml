@@ -153,3 +153,10 @@ jobs:
           heroku_app_name: "ci-cd-front"
           heroku_email: ${{secrets.MY_MAIL}}
           appdir: "web"
+  
+  Failure-Report:
+    if: failure()
+    needs: [Linting, Test-Build, Unit-Tests,Dependency-Audit]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'lol it failed'
