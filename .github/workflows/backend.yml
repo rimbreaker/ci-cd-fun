@@ -10,20 +10,21 @@ on:
 jobs:
   Setup:
     runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: server
-      steps:
-        - name: directory checkout
-          uses: actions/checkout@v2
-        - name: Node setup
-          uses: actions/setup-node@v2.5.1
-          with:
-            cache: "yarn"
-            cache-dependency-path: server/yarn.lock
-        - name: linting
-          run: yarn
-  QA:
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - name: directory checkout
+        uses: actions/checkout@v2
+      - name: Node setup
+        uses: actions/setup-node@v2.5.1
+        with:
+          cache: "yarn"
+          cache-dependency-path: server/yarn.lock
+      - name: linting
+        run: yarn
+        
+  Linting:
     needs: Setup
     runs-on: ubuntu-latest
     defaults:
@@ -32,15 +33,45 @@ jobs:
     steps:
       - name: directory checkout
         uses: actions/checkout@v2
+      - name: cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.yarn
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
       - name: linting
-        run: |
-          yarn
-          yarn lint
+        run: yarn lint
+        
+  Test-Build:
+    needs: Setup
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - name: directory checkout
+        uses: actions/checkout@v2
+      - name: cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.yarn
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
       - name: test build
         run: yarn build
 
   Build-n-deploy-backend:
-    needs: QA
+    needs: [Linting,Test-Build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
