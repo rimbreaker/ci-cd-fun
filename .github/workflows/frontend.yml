@@ -25,10 +25,6 @@ jobs:
       - name: installing dependencies
         run: yarn --verbose > yarn-report.txt
         
-      - run: ls
-      
-      - run: cat yarn-report.txt
-        
       - name: upload dependency report
         uses: actions/upload-artifact@v2
         with:
@@ -142,16 +138,9 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: audit
-        shell: bash
         run: |
           yarn
-          yarn yarn-audit-ci --high > audit.report.txt
-        
-      - name: upload audit report
-        uses: actions/upload-artifact@v2
-        with:
-          name: audit
-          path: audit-report.txt
+          yarn yarn-audit-ci --high
 
   Dependency-Audit-Info:
     needs: Node-Setup
@@ -177,7 +166,6 @@ jobs:
             ${{ runner.os }}-
 
       - name: audit
-        shell: bash
         run: yarn audit --json > audit-report.json
           
         if: failure() 
@@ -185,7 +173,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: audit
-          path: audit-report.json
+          path: ./web/audit-report.json
 
   Build-n-deploy-frontend:
     needs: [Linting, Test-Build, Unit-Tests,Dependency-Audit-High]
