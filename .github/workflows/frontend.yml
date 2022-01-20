@@ -21,8 +21,12 @@ jobs:
         with:
           cache: "yarn"
           cache-dependency-path: web/yarn.lock
+      - run: ls
       - name: installing dependencies
+        shell: bash
         run: yarn > yarn-report.txt
+        
+      - run: ls 
         
       - name: upload dependency report
         uses: actions/upload-artifact@v2
@@ -138,7 +142,9 @@ jobs:
 
       - name: audit
         shell: bash
-        run: yarn yarn-audit-ci --high > audit.report.txt
+        run: |
+          yarn
+          yarn yarn-audit-ci --high > audit.report.txt
         
       - name: upload audit report
         uses: actions/upload-artifact@v2
