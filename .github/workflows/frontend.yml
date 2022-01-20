@@ -132,7 +132,13 @@ jobs:
           command: yarn cypress run
           browser: chrome
           headless: true
-      - run: ls ./web/cypress
+      - run: ls ./web/cypress/videos
+      
+      - name: upload e2e test report
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports
+          path: ./web/cypress/videos
 
   Build-n-deploy-frontend:
     needs: [Linting, Unit-Tests, Dependency-Audit, E2E-Tests]
