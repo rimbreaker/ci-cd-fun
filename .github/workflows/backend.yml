@@ -23,24 +23,29 @@ jobs:
           cache-dependency-path: server/yarn.lock
       - name: linting
         run: yarn
-  QA:
+        
+  Linting:
     needs: Setup
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: server
     steps:
-      - name: directory checkout
-        uses: actions/checkout@v2
       - name: linting
-        run: |
-          yarn
-          yarn lint
+        run: yarn lint
+        
+  Test-Build:
+    needs: Setup
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
       - name: test build
         run: yarn build
 
   Build-n-deploy-backend:
-    needs: QA
+    needs: [Linting,Test-Build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
