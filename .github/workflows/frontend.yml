@@ -159,11 +159,15 @@ jobs:
             ${{ runner.os }}-
 
       - name: audit
+        shell: bash
         run: |
           yarn
-          yarn yarn-audit-ci
-        if: failure()
-      - run: echo 'failed, lol'
+          yarn audit --json > audit-report.json
+      - name: upload audit report
+        uses: actions/upload-artifact@v2
+        with:
+          name: audit
+          path: audit-report.json
 
   Build-n-deploy-frontend:
     needs: [Linting, Test-Build, Unit-Tests,Dependency-Audit-High]
