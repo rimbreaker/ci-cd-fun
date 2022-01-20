@@ -25,7 +25,8 @@ jobs:
           cache: "yarn"
           cache-dependency-path: web/yarn.lock
       - name: linting
-        run: yarn
+        run: |
+          yarn
           yarn lint:js
           yarn lint:css
 
