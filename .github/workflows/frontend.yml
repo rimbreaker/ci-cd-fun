@@ -109,13 +109,13 @@ jobs:
           yarn test
 
   Dependency-Audit:
-    if: always() 
     needs: Node-Setup
     runs-on: ubuntu-latest
     strategy:
       matrix:
         audit-severity: [high, info]
-    continue-on-error: ${{matrix.audit-severity}} == info
+    if: ${{matrix.audit-severity}} == info
+    continue-on-error: true
     defaults:
       run:
         working-directory: web
