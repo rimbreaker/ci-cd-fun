@@ -113,7 +113,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        audit-severity: [critical, high, moderate, low, info]
+        audit-severity: [critical, high, moderate, low]
     defaults:
       run:
         working-directory: web
@@ -136,7 +136,7 @@ jobs:
       - name: audit
         run: |
           yarn
-          yarn ${{matrix.audit-severity}}
+          yarn audit --level ${{matrix.audit-severity}}
 
   Build-n-deploy-frontend:
     needs: [Linting, Test-Build, Unit-Tests]
