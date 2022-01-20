@@ -131,9 +131,16 @@ jobs:
             ${{ runner.os }}-
 
       - name: audit
+        shell: bash
         run: |
           yarn
-          yarn yarn-audit-ci --high
+          yarn yarn-audit-ci --high > audit.report.json
+        
+      - name: upload audit report
+        uses: actions/upload-artifact@v2
+        with:
+          name: audit
+          path: audit-report.json
 
   Dependency-Audit-Info:
     needs: Node-Setup
@@ -162,7 +169,7 @@ jobs:
         shell: bash
         run: yarn audit --json > audit-report.json
           
-        if: always()  
+        if: failure() 
       - name: upload audit report
         uses: actions/upload-artifact@v2
         with:
