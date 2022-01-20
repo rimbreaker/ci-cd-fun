@@ -103,7 +103,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - name: test build
+      - name: unit testing
         run: |
           yarn
           yarn test
@@ -111,6 +111,9 @@ jobs:
   Dependency-Audit:
     needs: Node-Setup
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        audit-severity: [critical, high, moderate, low, info]
     defaults:
       run:
         working-directory: web
@@ -130,10 +133,10 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - name: test build
+      - name: audit
         run: |
           yarn
-          yarn audit
+          yarn ${{matrix.audit-severity}}
 
   Build-n-deploy-frontend:
     needs: [Linting, Test-Build, Unit-Tests]
