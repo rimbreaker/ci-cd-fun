@@ -17,12 +17,14 @@ jobs:
       run:
         working-directory: web
     steps:
-      - uses: actions/checkout@v2
-      - name: linting
+      - name: directory checkout
+        uses: actions/checkout@v2
+      - name: Node setup
         uses: actions/setup-node@v2.5.1
         with:
           cache: "yarn"
           cache-dependency-path: web/yarn.lock
+      - name: linting
         run: yarn
           yarn lint:js
           yarn lint:css
