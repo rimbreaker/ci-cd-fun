@@ -141,9 +141,6 @@ jobs:
   E2E-Tests:
     needs: Node-Setup
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: web
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -157,8 +154,12 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          build: yarn build
+          working-directory: web
+          path: web
+          install: true
+          install-comand: yarn
           start: yarn start
+          command: yarn cypress run
           browser: chrome
           headless: true
 
@@ -179,7 +180,7 @@ jobs:
 
   Failure-Report:
     if: failure()
-    needs:
+    needs: |
       [
         Linting,
         Test-Build,
@@ -195,4 +196,5 @@ jobs:
         uses: actions/download-artifact@v2.1.0
         with:
           name: reports
+      - run: ls
       - run: cat ./**/reports
