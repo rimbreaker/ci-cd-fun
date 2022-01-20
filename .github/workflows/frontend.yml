@@ -180,7 +180,7 @@ jobs:
 
   Failure-Report:
     if: failure()
-    needs: |
+    needs: 
       [
         Linting,
         Test-Build,
