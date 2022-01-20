@@ -10,19 +10,19 @@ on:
 jobs:
   Setup:
     runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: server
-      steps:
-        - name: directory checkout
-          uses: actions/checkout@v2
-        - name: Node setup
-          uses: actions/setup-node@v2.5.1
-          with:
-            cache: "yarn"
-            cache-dependency-path: server/yarn.lock
-        - name: linting
-          run: yarn
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - name: directory checkout
+        uses: actions/checkout@v2
+      - name: Node setup
+        uses: actions/setup-node@v2.5.1
+        with:
+          cache: "yarn"
+          cache-dependency-path: server/yarn.lock
+      - name: linting
+        run: yarn
   QA:
     needs: Setup
     runs-on: ubuntu-latest
