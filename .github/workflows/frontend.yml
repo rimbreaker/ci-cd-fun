@@ -21,13 +21,11 @@ jobs:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2.5.1
         with:
-          cache: 'yarn'
+          cache: "yarn"
           cache-dependency-path: web/yarn.lock
       - run: yarn
-
-      - name: linting
-        uses: actions/setup-node@v2.5.1
       - run: yarn lint:js
+      - run: yarn lint:css
 
   Build-n-deploy-frontend:
     runs-on: ubuntu-latest
