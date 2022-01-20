@@ -135,7 +135,7 @@ jobs:
       - run: ls ./cypress
 
   Build-n-deploy-frontend:
-    needs: [Linting, Test-Build, Unit-Tests, Dependency-Audit, E2E-Tests]
+    needs: [Linting, Unit-Tests, Dependency-Audit, E2E-Tests]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -154,7 +154,6 @@ jobs:
     needs: 
       [
         Linting,
-        Test-Build,
         Unit-Tests,
         Dependency-Audit,
         Node-Setup,
