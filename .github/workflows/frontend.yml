@@ -163,7 +163,7 @@ jobs:
           yarn
           yarn yarn-audit-ci
         if: failure()
-        run: echo 'failed, lol'
+      - run: echo 'failed, lol'
 
   Build-n-deploy-frontend:
     needs: [Linting, Test-Build, Unit-Tests,Dependency-Audit-High]
