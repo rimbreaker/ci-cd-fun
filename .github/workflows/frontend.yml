@@ -132,7 +132,7 @@ jobs:
           command: yarn cypress run
           browser: chrome
           headless: true
-      - run: ls ./cypress
+      - run: ls cypress
 
   Build-n-deploy-frontend:
     needs: [Linting, Unit-Tests, Dependency-Audit, E2E-Tests]
