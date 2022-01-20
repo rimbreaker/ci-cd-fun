@@ -10,9 +10,6 @@ on:
 jobs:
   QA:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x]
     defaults:
       run:
         working-directory: web
