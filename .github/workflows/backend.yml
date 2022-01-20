@@ -16,6 +16,19 @@ jobs:
     steps:
       - name: directory checkout
         uses: actions/checkout@v2
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.yarn
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
       - name: Node setup
         uses: actions/setup-node@v2.5.1
         with:
@@ -29,6 +42,7 @@ jobs:
         run: yarn build
 
   Build-n-deploy-backend:
+    needs: QA
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

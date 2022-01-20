@@ -30,6 +30,7 @@ jobs:
         run: yarn build
 
   Build-n-deploy-frontend:
+    needs: QA
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
