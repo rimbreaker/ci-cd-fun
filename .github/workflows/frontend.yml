@@ -136,7 +136,7 @@ jobs:
       - name: audit
         run: |
           yarn
-          yarn audit --level ${{matrix.audit-severity}}
+          yarn yarn-audit-ci --${{matrix.audit-severity}}
 
   Build-n-deploy-frontend:
     needs: [Linting, Test-Build, Unit-Tests]
