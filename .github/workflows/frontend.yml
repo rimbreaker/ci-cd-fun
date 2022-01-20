@@ -13,11 +13,9 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
-    defaults: 
-      run:
-        working-directory: web
     steps:
       - run: pwd
+      - run: ls
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2.5.1
         with:
