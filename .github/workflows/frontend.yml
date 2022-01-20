@@ -169,11 +169,12 @@ jobs:
         run: yarn audit --json > audit-report.json
           
         if: failure() 
+      - run: ls
       - name: upload audit report
         uses: actions/upload-artifact@v2
         with:
           name: audit
-          path: ./web/audit-report.json
+          path: ./**/audit-report.json
 
   Build-n-deploy-frontend:
     needs: [Linting, Test-Build, Unit-Tests,Dependency-Audit-High]
