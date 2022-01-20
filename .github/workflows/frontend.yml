@@ -55,33 +55,10 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: linting js
-        run: |
-          yarn
-          yarn lint:js
+        run: yarn lint:js
 
       - name: linting css
         run: yarn lint:css
-
-  Test-Build:
-    needs: Node-Setup
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: web
-    steps:
-      - name: directory checkout
-        uses: actions/checkout@v2
-
-      - name: cache node modules
-        uses: actions/cache@v2
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-
-      - name: test build
-        run: |
-          yarn
-          yarn build
 
   Unit-Tests:
     needs: Node-Setup
@@ -100,9 +77,7 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: unit testing
-        run: |
-          yarn
-          yarn test --verbose --json > unit-test-report.json
+        run: yarn test --json > unit-test-report.json
 
       - name: upload testing report
         uses: actions/upload-artifact@v2
@@ -128,9 +103,7 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: audit
-        run: |
-          yarn
-          yarn yarn-audit-ci --high > audit-report.txt
+        run: yarn yarn-audit-ci --high > audit-report.txt
 
       - name: upload audit report
         uses: actions/upload-artifact@v2
@@ -159,6 +132,7 @@ jobs:
           command: yarn cypress run
           browser: chrome
           headless: true
+      - run: ls ./cypress
 
   Build-n-deploy-frontend:
     needs: [Linting, Test-Build, Unit-Tests, Dependency-Audit, E2E-Tests]
