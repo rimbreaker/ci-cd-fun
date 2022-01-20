@@ -134,13 +134,13 @@ jobs:
         shell: bash
         run: |
           yarn
-          yarn yarn-audit-ci --high > audit.report.json
+          yarn yarn-audit-ci --high > audit.report.txt
         
       - name: upload audit report
         uses: actions/upload-artifact@v2
         with:
           name: audit
-          path: audit-report.json
+          path: web/audit-report.txt
 
   Dependency-Audit-Info:
     needs: Node-Setup
@@ -167,14 +167,14 @@ jobs:
 
       - name: audit
         shell: bash
-        run: yarn audit --json > audit-report.json
+        run: yarn audit --json | audit-report.json
           
-        if: failure() 
+        if: failure() || success()
       - name: upload audit report
         uses: actions/upload-artifact@v2
         with:
           name: audit
-          path: audit-report.json
+          path: web/audit-report.json
 
   Build-n-deploy-frontend:
     needs: [Linting, Test-Build, Unit-Tests,Dependency-Audit-High]
