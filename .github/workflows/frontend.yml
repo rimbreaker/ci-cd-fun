@@ -114,7 +114,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        audit-severity: [critical, high, moderate, low]
+        audit-severity: [high, info]
+    continue-on-error: ${{matrix.audit-severity}} == info
     defaults:
       run:
         working-directory: web
@@ -135,7 +136,6 @@ jobs:
             ${{ runner.os }}-
 
       - name: audit
-        if: always()
         run: |
           yarn
           yarn yarn-audit-ci --${{matrix.audit-severity}}
