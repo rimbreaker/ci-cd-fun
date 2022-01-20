@@ -17,6 +17,7 @@ jobs:
       run:
         working-directory: ./web
     steps:
+      - run: pwd
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2.5.1
         with:
