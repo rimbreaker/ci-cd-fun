@@ -29,3 +29,5 @@ Gun({
   web: server,
   radisk: false,
 });
+
+export{app}
