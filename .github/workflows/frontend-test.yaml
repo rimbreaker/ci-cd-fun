@@ -1,8 +1,6 @@
-name: frontend CI
+name: frontend testing
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
     paths: ["web/**"]
@@ -133,31 +131,16 @@ jobs:
           browser: chrome
           headless: true
       - run: ls ./web/cypress/videos
-      
+
       - name: upload e2e test report
         uses: actions/upload-artifact@v2
         with:
           name: reports
           path: ./web/cypress/videos
 
-  Build-n-deploy-frontend:
-    needs: [Linting, Unit-Tests, Dependency-Audit, E2E-Tests]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Deploy frontend to heroku
-        uses: AkhileshNS/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "ci-cd-front"
-          heroku_email: ${{secrets.MY_MAIL}}
-          appdir: "web"
-
   Failure-Report:
     if: failure()
-    needs: 
+    needs:
       [
         Linting,
         Unit-Tests,

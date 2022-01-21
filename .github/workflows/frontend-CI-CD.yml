@@ -1,0 +1,173 @@
+name: frontend CI/CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  Node-Setup:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - name: directory checkout
+        uses: actions/checkout@v2
+      - name: Node setup
+        uses: actions/setup-node@v2.5.1
+        with:
+          cache: "yarn"
+          cache-dependency-path: web/yarn.lock
+
+      - name: cache node modules
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: installing dependencies
+        run: yarn --verbose --json > yarn-report.json
+
+      - name: upload instalation report
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports
+          path: ./web/yarn-report.json
+          if-no-files-found: error
+
+  Linting:
+    needs: Node-Setup
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - name: directory checkout
+        uses: actions/checkout@v2
+
+      - name: cache node modules
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: linting js
+        run: yarn lint:js
+
+      - name: linting css
+        run: yarn lint:css
+
+  Unit-Tests:
+    needs: Node-Setup
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - name: directory checkout
+        uses: actions/checkout@v2
+
+      - name: cache node modules
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: unit testing
+        run: yarn test --json > unit-test-report.json
+
+      - name: upload testing report
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports
+          path: ./web/unit-test-report.json
+          if-no-files-found: error
+
+  Dependency-Audit:
+    needs: Node-Setup
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - name: directory checkout
+        uses: actions/checkout@v2
+
+      - name: cache node modules
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: audit
+        run: yarn yarn-audit-ci --high > audit-report.txt
+
+      - name: upload audit report
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports
+          path: ./web/audit-report.txt
+
+  E2E-Tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: cache node modules
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          working-directory: web
+          install: true
+          start: yarn start
+          command: yarn cypress run
+          browser: chrome
+          headless: true
+      - run: ls ./web/cypress/videos
+
+      - name: upload e2e test report
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports
+          path: ./web/cypress/videos
+
+  Build-n-deploy-frontend:
+    needs: [Linting, Unit-Tests, Dependency-Audit, E2E-Tests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Deploy frontend to heroku
+        uses: AkhileshNS/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "ci-cd-front"
+          heroku_email: ${{secrets.MY_MAIL}}
+          appdir: "web"
+
+  Failure-Report:
+    if: failure()
+    needs:
+      [
+        Linting,
+        Unit-Tests,
+        Dependency-Audit,
+        Node-Setup,
+        Build-n-deploy-frontend,
+        E2E-Tests,
+      ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.1.0
+        with:
+          name: reports
+      - run: ls
+      - run: cat ./**/reports
