@@ -89,5 +89,7 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Run E2E tests
-        run: yarn test:e2e
+        run: |
+          yarn
+          yarn test:e2e
   
