@@ -1,6 +1,6 @@
-name: Push server docker image to registry
+name: docker image push
 on:
-  pull_request:
+  push:
     branches: [ main ]
 jobs:
   build-container:
