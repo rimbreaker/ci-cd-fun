@@ -1,5 +1,6 @@
-import express from "express";
 import { getColorName } from "../controllers/colorsController";
+import express from "express";
+
 
 const router = express.Router();
 

@@ -82,7 +82,8 @@ jobs:
       - name: cache node modules
         uses: actions/cache@v2
         with:
-          path: "**/node_modules"
+          path: | 
+           **/node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: unit testing
@@ -133,13 +134,12 @@ jobs:
       - name: cache node modules
         uses: actions/cache@v2
         with:
-          path: "**/node_modules"
+          path: |
+           **/node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Run E2E tests
-        run: |
-          yarn
-          yarn test:e2e
+        run: yarn test:e2e
 
   Build-n-deploy-backend:
     needs: [Linting, Test-Build, E2E-Tests, Unit-Tests]
