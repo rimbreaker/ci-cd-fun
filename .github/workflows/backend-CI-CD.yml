@@ -13,16 +13,19 @@ jobs:
     steps:
       - name: directory checkout
         uses: actions/checkout@v2
-      - name: cache node modules
-        uses: actions/cache@v2
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
       - name: Node setup
         uses: actions/setup-node@v2.5.1
         with:
           cache: "yarn"
           cache-dependency-path: server/yarn.lock
+
+      - name: cache node modules
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
       - name: installing dependencies
         run: yarn
 
@@ -35,11 +38,13 @@ jobs:
     steps:
       - name: directory checkout
         uses: actions/checkout@v2
+
       - name: cache node modules
         uses: actions/cache@v2
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
       - name: linting
         run: |
           yarn
@@ -54,11 +59,13 @@ jobs:
     steps:
       - name: directory checkout
         uses: actions/checkout@v2
+
       - name: cache node modules
         uses: actions/cache@v2
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
       - name: test build
         run: |
           yarn
@@ -92,6 +99,33 @@ jobs:
           path: ./server/unit-test-backend-report.json
           if-no-files-found: error
 
+  Dependency-Audit:
+    needs: Node-Setup
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - name: directory checkout
+        uses: actions/checkout@v2
+
+      - name: cache node modules
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: audit
+        run: |
+          yarn
+          yarn yarn-audit-ci --high > audit-report.txt
+
+      - name: upload audit report
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports
+          path: ./server/audit-report.txt
+
   E2E-Tests:
     needs: Node-Setup
     runs-on: ubuntu-latest
@@ -114,7 +148,7 @@ jobs:
           yarn test:e2e
 
   Build-n-deploy-backend:
-    needs: [Linting, Test-Build]
+    needs: [Linting, Test-Build, E2E-Tests, Unit-Tests, Dependency-Audit]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -127,7 +161,7 @@ jobs:
           heroku_app_name: "ci-cd-back"
           heroku_email: ${{secrets.MY_MAIL}}
           appdir: "server"
-        
+
   Failure-Report:
     if: failure()
     needs:
@@ -137,6 +171,7 @@ jobs:
         Node-Setup,
         Build-n-deploy-frontend,
         E2E-Tests,
+        Test-Build,
       ]
     runs-on: ubuntu-latest
     steps:
