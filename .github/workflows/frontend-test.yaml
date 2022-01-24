@@ -146,7 +146,6 @@ jobs:
         Unit-Tests,
         Dependency-Audit,
         Node-Setup,
-        Build-n-deploy-frontend,
         E2E-Tests,
       ]
     runs-on: ubuntu-latest
