@@ -71,3 +71,23 @@ jobs:
         run: |
           yarn
           yarn build
+
+  E2E-Tests:
+    needs: Node-Setup
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: cache node modules
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Run E2E tests
+        run: yarn test:e2e
+  
