@@ -1,8 +1,9 @@
 name: backend CI/CD
 
 on:
-  push:
+  pull_request:
     branches: [main]
+    paths: ["server/**"]
 
 jobs:
   Node-Setup:
