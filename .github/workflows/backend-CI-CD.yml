@@ -70,7 +70,7 @@ jobs:
         run: |
           yarn
           yarn build
-  
+          
   Unit-Tests:
     needs: Node-Setup
     runs-on: ubuntu-latest
@@ -114,9 +114,7 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Run E2E tests
-        run: |
-          yarn
-          yarn test:e2e
+        run: yarn test:e2e
 
   Build-n-deploy-backend:
     needs: [Linting, Test-Build]
