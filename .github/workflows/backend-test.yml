@@ -19,6 +19,12 @@ jobs:
         with:
           cache: "yarn"
           cache-dependency-path: server/yarn.lock
+      - name: cache node modules
+        uses: actions/cache@v2
+        with:
+          path: | 
+           **/node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: installing dependencies
         run: yarn
 
@@ -31,17 +37,6 @@ jobs:
     steps:
       - name: directory checkout
         uses: actions/checkout@v2
-      - name: cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.yarn
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
       - name: linting
         run: |
           yarn
@@ -58,19 +53,41 @@ jobs:
         uses: actions/checkout@v2
       - name: cache node modules
         uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
         with:
-          path: ~/.yarn
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: test build
         run: |
           yarn
           yarn build
+
+  Unit-Tests:
+    needs: Node-Setup
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - name: directory checkout
+        uses: actions/checkout@v2
+
+      - name: cache node modules
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: unit testing
+        run: |
+          yarn
+          yarn test --json > unit-test-report.json
+
+      - name: upload testing report
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports
+          path: ./server/unit-test-report.json
+          if-no-files-found: error
 
   E2E-Tests:
     needs: Node-Setup
@@ -89,5 +106,7 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Run E2E tests
-        run: yarn test:e2e
+        run: |
+         yarn
+         yarn test:e2e
   
