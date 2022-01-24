@@ -10,6 +10,9 @@ jobs:
       run:
         working-directory: server
     steps:
+      - name: directory checkout
+        uses: actions/checkout@v2
+      
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       
