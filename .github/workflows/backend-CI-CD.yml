@@ -38,12 +38,11 @@ jobs:
       - name: cache node modules
         uses: actions/cache@v2
         with:
-          path: "**/node_modules"
+          path: | 
+           **/node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: linting
-        run: |
-          yarn
-          yarn lint
+        run: yarn lint
 
   Test-Build:
     needs: Node-Setup
