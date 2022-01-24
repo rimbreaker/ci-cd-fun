@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
 import { getColorName } from "./colorsController";
+import { Request, Response } from "express";
 
 describe("test suite for colors controller", () => {
   let resultCatcher: any;
