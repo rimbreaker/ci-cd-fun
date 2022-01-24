@@ -7,7 +7,7 @@
     "build": "tsc",
     "dev": "nodemon --exec ts-node src/index.ts",
     "lint": "./node_modules/.bin/eslint ./src/**/*.ts",
-    "test": "jest --coverage=true --json",
+    "test": "jest --coverage=true --json --forceExit",
     "test:e2e": "jest .e2e.test.ts --forceExit"
   },
   "author": "Jan Kacperczyk",
