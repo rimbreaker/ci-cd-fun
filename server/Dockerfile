@@ -6,8 +6,6 @@ WORKDIR /app
 
 # Install app dependencies
 COPY package.json /app
-RUN ls -l
-RUN pwd
 COPY yarn.lock /app
 RUN yarn
 
