@@ -46,7 +46,9 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: linting
-        run: yarn lint
+        run: |
+          yarn
+          yarn lint
 
   Test-Build:
     needs: Node-Setup
@@ -82,12 +84,14 @@ jobs:
       - name: cache node modules
         uses: actions/cache@v2
         with:
-          path: | 
-           **/node_modules
+          path: |
+            **/node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: unit testing
-        run: yarn test --json > unit-test-report.json
+        run: |
+          yarn
+          yarn test --json > unit-test-report.json
 
       - name: upload testing report
         uses: actions/upload-artifact@v2
@@ -113,7 +117,9 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: audit
-        run: yarn yarn-audit-ci --high > audit-report.txt
+        run: |
+          yarn
+          yarn yarn-audit-ci --high > audit-report.txt
 
       - name: upload audit report
         uses: actions/upload-artifact@v2
@@ -135,14 +141,16 @@ jobs:
         uses: actions/cache@v2
         with:
           path: |
-           **/node_modules
+            **/node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Run E2E tests
-        run: yarn test:e2e
+        run: |
+          yarn
+          yarn test:e2e
 
   Build-n-deploy-backend:
-    needs: [Linting, Test-Build, E2E-Tests, Unit-Tests]
+    needs: [Linting, Test-Build, E2E-Tests, Unit-Tests, Dependency-Audit]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -166,6 +174,7 @@ jobs:
         Node-Setup,
         Build-n-deploy-backend,
         E2E-Tests,
+        Test-Build,
       ]
     runs-on: ubuntu-latest
     steps:
