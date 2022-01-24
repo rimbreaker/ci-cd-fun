@@ -169,7 +169,7 @@ jobs:
         Linting,
         Unit-Tests,
         Node-Setup,
-        Build-n-deploy-frontend,
+        Build-n-deploy-backend,
         E2E-Tests,
         Test-Build,
       ]
