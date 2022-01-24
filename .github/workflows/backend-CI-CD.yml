@@ -95,6 +95,31 @@ jobs:
           path: ./server/unit-test-report.json
           if-no-files-found: error
 
+  Dependency-Audit:
+    needs: Node-Setup
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - name: directory checkout
+        uses: actions/checkout@v2
+
+      - name: cache node modules
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: audit
+        run: yarn yarn-audit-ci --high > audit-report.txt
+
+      - name: upload audit report
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports
+          path: ./server/audit-report.txt
+
   E2E-Tests:
     needs: Node-Setup
     runs-on: ubuntu-latest
