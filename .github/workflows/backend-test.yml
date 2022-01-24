@@ -37,7 +37,9 @@ jobs:
       - name: directory checkout
         uses: actions/checkout@v2
       - name: linting
-        run: yarn lint
+        run: |
+          yarn
+          yarn lint
 
   Test-Build:
     needs: Node-Setup
@@ -75,7 +77,9 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: unit testing
-        run: yarn test --json > unit-test-report.json
+        run: |
+          yarn
+          yarn test --json > unit-test-report.json
 
       - name: upload testing report
         uses: actions/upload-artifact@v2
@@ -101,5 +105,7 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Run E2E tests
-        run: yarn test:e2e
+        run: |
+         yarn
+         yarn test:e2e
   
