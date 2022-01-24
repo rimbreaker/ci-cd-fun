@@ -71,6 +71,32 @@ jobs:
           yarn
           yarn build
   
+  Unit-Tests:
+    needs: Node-Setup
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - name: directory checkout
+        uses: actions/checkout@v2
+
+      - name: cache node modules
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: unit testing
+        run: yarn test --json > unit-test-report.json
+
+      - name: upload testing report
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports
+          path: ./server/unit-test-report.json
+          if-no-files-found: error
+
   E2E-Tests:
     needs: Node-Setup
     runs-on: ubuntu-latest
