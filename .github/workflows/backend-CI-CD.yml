@@ -170,6 +170,7 @@ jobs:
         Unit-Tests,
         Node-Setup,
         Build-n-deploy-backend,
+        Dependency-Audit,
         E2E-Tests,
         Test-Build,
       ]
