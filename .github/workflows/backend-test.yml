@@ -22,8 +22,8 @@ jobs:
       - name: cache node modules
         uses: actions/cache@v2
         with:
-          path: | 
-           **/node_modules
+          path: |
+            **/node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: installing dependencies
         run: yarn
@@ -107,6 +107,17 @@ jobs:
 
       - name: Run E2E tests
         run: |
-         yarn
-         yarn test:e2e
-  
+          yarn
+          yarn test:e2e
+
+  Failure-Report:
+    if: failure()
+    needs: [Linting, Unit-Tests, Dependency-Audit, Node-Setup, E2E-Tests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.1.0
+        with:
+          name: reports
+      - run: ls
+      - run: cat ./**/reports
